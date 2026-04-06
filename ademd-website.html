@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ADEMD — Association for Diabetes, Endocrine, and Metabolic Disorders</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ── RESET & BASE ────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+
+  :root {
+    --navy:       #0b1f3a;
+    --navy-mid:   #122848;
+    --teal:       #0d7e7e;
+    --teal-light: #10a3a3;
+    --cream:      #f7f5f1;
+    --warm-white: #fdfcfa;
+    --slate:      #4a5568;
+    --mid-grey:   #718096;
+    --line:       rgba(11,31,58,.10);
+    --font-head:  'Cormorant Garamond', Georgia, serif;
+    --font-body:  'DM Sans', sans-serif;
+    --radius:     4px;
+    --max:        1140px;
+    --ease:       cubic-bezier(.25,.46,.45,.94);
+    /* theme tokens — light defaults */
+    --bg-page:     #fdfcfa;
+    --bg-alt:      #f7f5f1;
+    --bg-card:     #ffffff;
+    --bg-dark-sec: #0b1f3a;
+    --text-primary:#0b1f3a;
+    --text-body:   #4a5568;
+    --text-muted:  #718096;
+    --text-on-dark:rgba(247,245,241,.75);
+    --border:      rgba(11,31,58,.10);
+    --nav-bg:      rgba(253,252,250,.96);
+    --input-bg:    #ffffff;
+    --stat-bg:     #ffffff;
+    --hero-grad-a: #fdfcfa;
+    --hero-grad-b: #e6f3f3;
+    --tag-color:   var(--teal);
+  }
+
+  /* ── DARK MODE TOKENS ────────────────────────────── */
+  html.dark {
+    --bg-page:     #0d1117;
+    --bg-alt:      #161b22;
+    --bg-card:     #1c2330;
+    --bg-dark-sec: #0a1628;
+    --text-primary:#e8edf3;
+    --text-body:   #9aabb8;
+    --text-muted:  #6b7f8e;
+    --text-on-dark:rgba(232,237,243,.70);
+    --border:      rgba(255,255,255,.07);
+    --nav-bg:      rgba(13,17,23,.97);
+    --input-bg:    #1c2330;
+    --stat-bg:     #1c2330;
+    --hero-grad-a: #0d1117;
+    --hero-grad-b: #0b2030;
+    --navy:        #e8edf3;
+    --slate:       #9aabb8;
+    --mid-grey:    #6b7f8e;
+    --cream:       #161b22;
+    --warm-white:  #0d1117;
+    --line:        rgba(255,255,255,.07);
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg-page);
+    color: var(--text-primary);
+    line-height: 1.7;
+    overflow-x: hidden;
+    transition: background .35s, color .35s;
+  }
+
+  /* ── UTILITY ─────────────────────────────────────── */
+  .container { max-width: var(--max); margin: 0 auto; padding: 0 2rem; }
+  .section    { padding: 6rem 0; }
+  .section--alt { background: var(--bg-alt); }
+  .section--dark { background: var(--bg-dark-sec); color: var(--cream); }
+
+  .tag {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 1rem;
+  }
+  .tag--light { color: var(--teal-light); }
+
+  h1,h2,h3,h4 { font-family: var(--font-head); line-height: 1.15; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .9rem 2.1rem;
+    font-family: var(--font-body);
+    font-size: .88rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all .25s var(--ease);
+    text-decoration: none;
+    border: none;
+  }
+  .btn--primary {
+    background: var(--teal);
+    color: #fff;
+  }
+  .btn--primary:hover { background: var(--teal-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(13,126,126,.30); }
+  .btn--outline {
+    background: transparent;
+    color: var(--navy);
+    border: 1.5px solid var(--navy);
+  }
+  .btn--outline:hover { background: var(--navy); color: #fff; transform: translateY(-2px); }
+  .btn--outline-light {
+    background: transparent;
+    color: #fff;
+    border: 1.5px solid rgba(255,255,255,.55);
+  }
+  .btn--outline-light:hover { background: rgba(255,255,255,.12); transform: translateY(-2px); }
+  .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+  /* ── NAV ──────────────────────────────────────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--nav-bg);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    transition: box-shadow .3s, background .35s;
+  }
+  nav.scrolled { box-shadow: 0 2px 20px rgba(11,31,58,.08); }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 68px;
+    max-width: var(--max); margin: 0 auto; padding: 0 2rem;
+  }
+  .nav-logo {
+    display: flex; align-items: baseline; gap: .4rem;
+    text-decoration: none;
+  }
+  .nav-logo-abbr {
+    font-family: var(--font-head);
+    font-size: 1.55rem;
+    font-weight: 600;
+    color: var(--navy);
+    letter-spacing: .02em;
+  }
+  .nav-logo-dot { color: var(--teal); }
+  .nav-logo-sub {
+    font-size: .65rem;
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--mid-grey);
+  }
+  .nav-links {
+    display: flex; align-items: center; gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: .83rem;
+    font-weight: 500;
+    color: var(--slate);
+    text-decoration: none;
+    letter-spacing: .03em;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--teal); }
+  .nav-cta { margin-left: 1rem; }
+
+  /* Hamburger */
+  .hamburger {
+    display: none; flex-direction: column; gap: 5px;
+    cursor: pointer; padding: 6px; background: none; border: none;
+  }
+  .hamburger span {
+    display: block; width: 24px; height: 2px;
+    background: var(--navy); border-radius: 2px;
+    transition: all .3s var(--ease);
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none;
+    position: fixed; top: 68px; left: 0; right: 0;
+    background: var(--bg-page);
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem 2rem 2rem;
+    z-index: 99;
+    flex-direction: column; gap: 1.2rem;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-size: .95rem; font-weight: 500; color: var(--text-primary);
+    text-decoration: none; padding: .4rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-menu a:last-child { border-bottom: none; }
+
+  /* ── HERO ─────────────────────────────────────────── */
+  #hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding-top: 68px;
+    overflow: hidden;
+    position: relative;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background: linear-gradient(135deg, var(--hero-grad-a) 55%, var(--hero-grad-b) 100%);
+    transition: background .35s;
+  }
+  /* Decorative lines */
+  .hero-bg::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 55%;
+    height: 100%;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 59px,
+        rgba(13,126,126,.055) 60px
+      );
+  }
+  .hero-bg::after {
+    content: '';
+    position: absolute;
+    width: 520px; height: 520px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(13,126,126,.12) 0%, transparent 70%);
+    top: 50%; right: 5%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative; z-index: 1;
+    padding: 5rem 2rem 5rem calc((100vw - var(--max))/2 + 2rem);
+    max-width: calc(var(--max)/2 + (100vw - var(--max))/2);
+  }
+  .hero-eyebrow {
+    display: flex; align-items: center; gap: .75rem;
+    margin-bottom: 1.5rem;
+  }
+  .hero-eyebrow-line {
+    width: 32px; height: 1.5px; background: var(--teal);
+  }
+  .hero-eyebrow-text {
+    font-size: .72rem; font-weight: 600;
+    letter-spacing: .16em; text-transform: uppercase;
+    color: var(--teal);
+  }
+  .hero-h1 {
+    font-size: clamp(2.6rem, 4.5vw, 3.8rem);
+    font-weight: 300;
+    color: var(--navy);
+    margin-bottom: 1.4rem;
+    letter-spacing: -.01em;
+  }
+  .hero-h1 em { font-style: italic; color: var(--teal); }
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--slate);
+    max-width: 480px;
+    margin-bottom: 2.4rem;
+    line-height: 1.75;
+  }
+  .hero-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+
+  /* Hero right panel */
+  .hero-visual {
+    position: relative; z-index: 1;
+    display: flex; align-items: center; justify-content: center;
+    padding: 4rem 2rem;
+    height: 100%;
+  }
+  .hero-card-stack {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+  }
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.4rem 1.8rem;
+    box-shadow: 0 4px 32px rgba(11,31,58,.08);
+    animation: floatUp .6s var(--ease) both;
+    transition: background .35s, border-color .35s;
+  }
+  .stat-card + .stat-card { margin-top: 1rem; }
+  .stat-card:nth-child(2) { animation-delay: .15s; }
+  .stat-card:nth-child(3) { animation-delay: .3s; }
+  .stat-num {
+    font-family: var(--font-head);
+    font-size: 2.4rem;
+    font-weight: 300;
+    color: var(--teal);
+    line-height: 1;
+  }
+  .stat-label { font-size: .8rem; font-weight: 500; color: var(--slate); margin-top: .25rem; letter-spacing: .02em; }
+  .stat-icon {
+    width: 36px; height: 36px;
+    background: rgba(13,126,126,.1);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: .8rem;
+  }
+  .stat-icon svg { width: 18px; height: 18px; stroke: var(--teal); fill: none; stroke-width: 1.8; }
+  .stat-card-inner { display: flex; align-items: flex-start; gap: 1rem; }
+  .stat-card-inner .stat-icon { margin-bottom: 0; flex-shrink: 0; }
+
+  @keyframes floatUp {
+    from { opacity:0; transform:translateY(20px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  /* ── PROBLEM ──────────────────────────────────────── */
+  #problem { padding: 6rem 0; }
+  .problem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+  .problem-text h2 {
+    font-size: clamp(2rem, 3vw, 2.7rem);
+    font-weight: 300;
+    margin-bottom: 1.4rem;
+  }
+  .problem-text h2 em { font-style: italic; color: var(--teal); }
+  .problem-text p {
+    font-size: .97rem;
+    color: var(--text-body);
+    margin-bottom: 1rem;
+    line-height: 1.8;
+  }
+  .pain-list { margin: 1.8rem 0; list-style: none; display: flex; flex-direction: column; gap: .85rem; }
+  .pain-list li {
+    display: flex; align-items: flex-start; gap: .9rem;
+    font-size: .93rem; color: var(--text-body); line-height: 1.6;
+  }
+  .pain-dot {
+    flex-shrink: 0;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--teal);
+    margin-top: .55rem;
+  }
+  .problem-visual {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .prob-block {
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    transition: box-shadow .3s, transform .3s, background .35s;
+  }
+  .prob-block:hover { box-shadow: 0 8px 28px rgba(11,31,58,.08); transform: translateY(-3px); }
+  .prob-block:nth-child(1) { grid-column: 1 / -1; }
+  .prob-block-icon {
+    width: 40px; height: 40px;
+    background: rgba(13,126,126,.12);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: .9rem;
+  }
+  .prob-block-icon svg { width: 20px; height: 20px; stroke: var(--teal); fill: none; stroke-width: 1.8; }
+  .prob-block h4 { font-family: var(--font-body); font-size: .82rem; font-weight: 600; color: var(--text-primary); margin-bottom: .35rem; }
+  .prob-block p  { font-size: .8rem; color: var(--text-muted); line-height: 1.6; }
+
+  /* ── ABOUT ────────────────────────────────────────── */
+  #about { background: var(--navy); color: var(--cream); }
+  .about-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+  .about-text h2 {
+    font-size: clamp(2rem, 3vw, 2.7rem);
+    font-weight: 300;
+    color: #fff;
+    margin-bottom: 1.4rem;
+  }
+  .about-text h2 em { font-style: italic; color: var(--teal-light); }
+  .about-text p {
+    font-size: .95rem;
+    color: rgba(247,245,241,.75);
+    margin-bottom: 1rem;
+    line-height: 1.8;
+  }
+  .about-pillars {
+    display: flex; flex-direction: column; gap: 1rem;
+    margin-top: 2rem;
+  }
+  .pillar {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1rem 1.2rem;
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 8px;
+    transition: background .3s, border-color .3s;
+  }
+  .pillar:hover { background: rgba(255,255,255,.05); border-color: rgba(13,163,163,.4); }
+  .pillar-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--teal-light); flex-shrink: 0;
+  }
+  .pillar span { font-size: .88rem; color: rgba(247,245,241,.9); }
+
+  .about-disciplines {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: rgba(255,255,255,.08);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.08);
+  }
+  .disc-cell {
+    background: rgba(11,31,58,.5);
+    padding: 2rem 1.5rem;
+    transition: background .3s;
+  }
+  .disc-cell:hover { background: rgba(13,126,126,.15); }
+  .disc-num {
+    font-family: var(--font-head);
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: var(--teal-light);
+    line-height: 1;
+  }
+  .disc-name { font-size: .85rem; font-weight: 500; color: rgba(247,245,241,.7); margin-top: .4rem; }
+
+  /* ── SOLUTION ─────────────────────────────────────── */
+  #solution { padding: 6rem 0; }
+  .solution-header { text-align: center; max-width: 640px; margin: 0 auto 4rem; }
+  .solution-header h2 {
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    font-weight: 300;
+    margin-bottom: 1rem;
+  }
+  .solution-header h2 em { font-style: italic; color: var(--teal); }
+  .solution-header p { font-size: .95rem; color: var(--text-body); line-height: 1.8; }
+
+  .solution-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  .sol-card {
+    background: var(--bg-page);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow .3s, transform .3s, background .35s;
+  }
+  .sol-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--teal);
+    transform: scaleX(0);
+    transition: transform .3s var(--ease);
+  }
+  .sol-card:hover { box-shadow: 0 12px 40px rgba(11,31,58,.1); transform: translateY(-4px); }
+  .sol-card:hover::before { transform: scaleX(1); }
+  .sol-icon {
+    width: 48px; height: 48px;
+    background: rgba(13,126,126,.1);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.2rem;
+  }
+  .sol-icon svg { width: 22px; height: 22px; stroke: var(--teal); fill: none; stroke-width: 1.7; }
+  .sol-card h3 {
+    font-family: var(--font-head);
+    font-size: 1.35rem;
+    font-weight: 400;
+    margin-bottom: .6rem;
+    color: var(--text-primary);
+  }
+  .sol-card p { font-size: .88rem; color: var(--text-body); line-height: 1.75; }
+
+  /* ── BENEFITS ─────────────────────────────────────── */
+  #benefits { background: var(--bg-alt); }
+  .benefits-header { max-width: 560px; margin-bottom: 4rem; }
+  .benefits-header h2 { font-size: clamp(2rem, 3vw, 2.8rem); font-weight: 300; margin-bottom: 1rem; }
+  .benefits-header h2 em { font-style: italic; color: var(--teal); }
+  .benefits-header p { font-size: .95rem; color: var(--text-body); }
+
+  .benefits-list { display: flex; flex-direction: column; gap: 2px; }
+  .benefit-row {
+    display: grid;
+    grid-template-columns: 56px 1fr 1fr;
+    gap: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: box-shadow .3s, transform .3s, background .35s;
+  }
+  .benefit-row:hover { box-shadow: 0 8px 28px rgba(11,31,58,.08); transform: translateY(-2px); }
+  .benefit-num {
+    background: var(--bg-dark-sec);
+    color: var(--teal-light);
+    font-family: var(--font-head);
+    font-size: 1.4rem;
+    font-weight: 300;
+    display: flex; align-items: center; justify-content: center;
+    writing-mode: vertical-lr;
+    letter-spacing: .05em;
+    min-height: 100px;
+  }
+  .benefit-title-col {
+    padding: 1.6rem 2rem;
+    border-right: 1px solid var(--border);
+  }
+  .benefit-title-col h3 {
+    font-family: var(--font-head);
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: .3rem;
+  }
+  .benefit-feature {
+    display: inline-flex; align-items: center; gap: .4rem;
+    font-size: .72rem; font-weight: 600; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--teal);
+    margin-top: .5rem;
+  }
+  .benefit-feature::before { content: '●'; font-size: .45rem; }
+  .benefit-desc-col { padding: 1.6rem 2rem; }
+  .benefit-desc-col p { font-size: .88rem; color: var(--text-body); line-height: 1.75; }
+
+  /* ── SOCIAL PROOF ─────────────────────────────────── */
+  #proof { background: var(--bg-page); }
+  .proof-header { text-align: center; max-width: 560px; margin: 0 auto 3.5rem; }
+  .proof-header h2 { font-size: clamp(1.8rem, 2.5vw, 2.4rem); font-weight: 300; margin-bottom: .75rem; }
+  .proof-header p { font-size: .95rem; color: var(--text-muted); }
+
+  .logo-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+    padding: 2rem 0 3.5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 3.5rem;
+  }
+  .logo-pill {
+    display: flex; align-items: center;
+    padding: .65rem 1.4rem;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    transition: border-color .25s, color .25s, background .35s;
+  }
+  .logo-pill:hover { border-color: var(--teal); color: var(--teal); }
+
+  .testimonials {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .testi-card {
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem 2rem 1.6rem;
+    position: relative;
+    transition: box-shadow .3s, transform .3s, background .35s;
+  }
+  .testi-card:hover { box-shadow: 0 8px 28px rgba(11,31,58,.08); transform: translateY(-3px); }
+  .testi-quote-mark {
+    font-family: var(--font-head);
+    font-size: 4rem;
+    line-height: 1;
+    color: var(--teal);
+    opacity: .25;
+    position: absolute;
+    top: 1rem; left: 1.6rem;
+  }
+  .testi-text {
+    font-size: .94rem;
+    color: var(--text-body);
+    line-height: 1.8;
+    margin-top: 1.6rem;
+    font-style: italic;
+  }
+  .testi-author {
+    display: flex; align-items: center; gap: .9rem;
+    margin-top: 1.5rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--border);
+  }
+  .testi-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--bg-dark-sec);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-head);
+    font-size: 1.1rem;
+    color: var(--teal-light);
+    flex-shrink: 0;
+  }
+  .testi-name { font-size: .83rem; font-weight: 600; color: var(--text-primary); }
+  .testi-role { font-size: .77rem; color: var(--text-muted); margin-top: .1rem; }
+
+  /* ── CTA BLOCK ────────────────────────────────────── */
+  #cta-block {
+    background: linear-gradient(135deg, #0b1f3a 0%, #0d3060 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  #cta-block::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 80% 50%, rgba(13,126,126,.25) 0%, transparent 60%),
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 39px,
+        rgba(255,255,255,.015) 40px
+      );
+  }
+  .cta-inner {
+    position: relative; z-index: 1;
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .cta-inner h2 {
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 300;
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+  .cta-inner h2 em { font-style: italic; color: var(--teal-light); }
+  .cta-inner p { font-size: .97rem; color: rgba(247,245,241,.7); margin-bottom: 2.2rem; line-height: 1.75; }
+  .cta-actions { display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+  .urgency-note {
+    display: block;
+    font-size: .78rem;
+    color: rgba(247,245,241,.45);
+    margin-top: 1.2rem;
+    letter-spacing: .04em;
+  }
+
+  /* ── FAQ ──────────────────────────────────────────── */
+  #faq { background: var(--bg-alt); }
+  .faq-layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 5rem;
+    align-items: start;
+  }
+  .faq-intro h2 {
+    font-size: clamp(2rem, 2.5vw, 2.6rem);
+    font-weight: 300;
+    margin-bottom: 1rem;
+  }
+  .faq-intro h2 em { font-style: italic; color: var(--teal); }
+  .faq-intro p { font-size: .9rem; color: var(--text-body); line-height: 1.75; }
+  .faq-list { display: flex; flex-direction: column; gap: 1px; }
+  .faq-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: .75rem;
+    transition: background .35s;
+  }
+  .faq-q {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.3rem 1.6rem;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: .93rem;
+    color: var(--text-primary);
+    user-select: none;
+    gap: 1rem;
+    transition: background .2s;
+  }
+  .faq-q:hover { background: var(--bg-alt); }
+  .faq-q svg {
+    width: 18px; height: 18px;
+    stroke: var(--teal); fill: none; stroke-width: 2;
+    flex-shrink: 0;
+    transition: transform .3s var(--ease);
+  }
+  .faq-item.open .faq-q svg { transform: rotate(45deg); }
+  .faq-a {
+    font-size: .88rem; color: var(--text-body); line-height: 1.8;
+    padding: 0 1.6rem;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .4s var(--ease), padding .3s;
+  }
+  .faq-item.open .faq-a { max-height: 300px; padding: 0 1.6rem 1.4rem; }
+
+  /* ── CONTACT ──────────────────────────────────────── */
+  #contact { background: var(--bg-page); }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+  .contact-info h2 {
+    font-size: clamp(2rem, 2.5vw, 2.6rem);
+    font-weight: 300;
+    margin-bottom: 1rem;
+  }
+  .contact-info h2 em { font-style: italic; color: var(--teal); }
+  .contact-info p { font-size: .95rem; color: var(--text-body); line-height: 1.8; margin-bottom: 2rem; }
+  .contact-items { display: flex; flex-direction: column; gap: 1.2rem; }
+  .contact-item {
+    display: flex; align-items: flex-start; gap: 1rem;
+    padding: 1.1rem 1.3rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-alt);
+    transition: border-color .25s, box-shadow .25s, background .35s;
+  }
+  .contact-item:hover { border-color: rgba(13,126,126,.3); box-shadow: 0 4px 16px rgba(13,126,126,.08); }
+  .ci-icon {
+    width: 38px; height: 38px;
+    background: rgba(13,126,126,.1);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .ci-icon svg { width: 18px; height: 18px; stroke: var(--teal); fill: none; stroke-width: 1.8; }
+  .ci-label { font-size: .72rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: .2rem; }
+  .ci-value { font-size: .9rem; color: var(--text-primary); font-weight: 500; }
+
+  /* Contact form */
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: .4rem; }
+  .form-group label { font-size: .78rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-body); }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: .8rem 1rem;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: .9rem;
+    color: var(--text-primary);
+    background: var(--input-bg);
+    outline: none;
+    transition: border-color .25s, box-shadow .25s, background .35s, color .35s;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(13,126,126,.12);
+  }
+  .form-group textarea { resize: vertical; min-height: 110px; }
+
+  /* ── FOOTER ───────────────────────────────────────── */
+  footer {
+    background: #0b1f3a;
+    color: rgba(247,245,241,.6);
+    padding: 3rem 0 2rem;
+  }
+  .footer-inner {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 2rem; flex-wrap: wrap;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    margin-bottom: 1.5rem;
+  }
+  .footer-brand .nav-logo-abbr { color: #fff; }
+  .footer-brand .nav-logo-sub  { color: rgba(247,245,241,.45); }
+  .footer-brand p { font-size: .82rem; color: rgba(247,245,241,.45); margin-top: .8rem; max-width: 240px; line-height: 1.7; }
+  .footer-links { display: flex; gap: 3rem; flex-wrap: wrap; }
+  .footer-col h5 {
+    font-family: var(--font-body);
+    font-size: .72rem; font-weight: 600;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: rgba(247,245,241,.45);
+    margin-bottom: .9rem;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+  .footer-col ul li a { font-size: .83rem; color: rgba(247,245,241,.65); text-decoration: none; transition: color .2s; }
+  .footer-col ul li a:hover { color: var(--teal-light); }
+  .footer-bottom {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 1rem; flex-wrap: wrap;
+    font-size: .78rem;
+  }
+
+  /* ── SCROLL ANIMATIONS ────────────────────────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .6s var(--ease), transform .6s var(--ease);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: .1s; }
+  .reveal-delay-2 { transition-delay: .2s; }
+  .reveal-delay-3 { transition-delay: .3s; }
+
+  /* ── RESPONSIVE ───────────────────────────────────── */
+  @media (max-width: 900px) {
+    #hero { grid-template-columns: 1fr; min-height: auto; padding-top: 68px; }
+    .hero-content { padding: 4rem 2rem 2rem; max-width: 100%; }
+    .hero-visual { padding: 2rem; }
+    .hero-card-stack { max-width: 100%; }
+    .problem-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .problem-visual { grid-template-columns: 1fr 1fr; }
+    .about-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .solution-grid { grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .benefit-row { grid-template-columns: 40px 1fr; }
+    .benefit-desc-col { display: none; }
+    .testimonials { grid-template-columns: 1fr; }
+    .faq-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+    .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .footer-inner { flex-direction: column; }
+    .nav-links, .nav-cta { display: none; }
+    .hamburger { display: flex; }
+  }
+  @media (max-width: 600px) {
+    .section { padding: 4rem 0; }
+    .solution-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .logo-strip { gap: 1rem; }
+    .hero-h1 { font-size: 2.2rem; }
+    .benefit-row { grid-template-columns: 1fr; }
+    .benefit-num { writing-mode: horizontal-tb; min-height: auto; padding: .6rem 1.2rem; font-size: 1rem; justify-content: flex-start; }
+    .benefit-desc-col { display: block; border-top: 1px solid var(--line); }
+    .about-disciplines { grid-template-columns: 1fr 1fr; }
+    .footer-links { flex-direction: column; gap: 1.5rem; }
+    .footer-bottom { flex-direction: column; text-align: center; }
+    .problem-visual { grid-template-columns: 1fr; }
+    .prob-block:nth-child(1) { grid-column: 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══════════════════════════════════════════ -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo" aria-label="ADEMD Home">
+      <span class="nav-logo-abbr">ADEMD<span class="nav-logo-dot">.</span></span>
+      <span class="nav-logo-sub">Medical Association</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#solution">What We Offer</a></li>
+      <li><a href="#benefits">Why Join</a></li>
+      <li><a href="#proof">Community</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#cta-block" class="btn btn--primary nav-cta">Reserve My Spot →</a>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about"    onclick="closeMobile()">About</a>
+  <a href="#solution" onclick="closeMobile()">What We Offer</a>
+  <a href="#benefits" onclick="closeMobile()">Why Join</a>
+  <a href="#proof"    onclick="closeMobile()">Community</a>
+  <a href="#faq"      onclick="closeMobile()">FAQ</a>
+  <a href="#contact"  onclick="closeMobile()">Contact</a>
+  <a href="#cta-block" class="btn btn--primary" onclick="closeMobile()" style="justify-content:center;margin-top:.5rem;">Reserve My Spot →</a>
+</div>
+
+<!-- ═══ HERO ════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-bg"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-line"></div>
+      <span class="hero-eyebrow-text">For Endocrinologists &amp; Metabolic Specialists</span>
+    </div>
+    <h1 class="hero-h1">
+      Stay Ahead of the<br>
+      Fastest-Moving Field<br>
+      in Medicine —<br>
+      <em>Without Practicing Alone</em>
+    </h1>
+    <p class="hero-sub">
+      Your patients have diabetes, metabolic disorders, and obesity — often all at once. The science is evolving faster than any one specialty can track. You deserve a community that moves with you.
+    </p>
+    <div class="hero-actions">
+      <a href="#cta-block" class="btn btn--primary">
+        Reserve My Spot at the Next Event
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#about" class="btn btn--outline">Learn About ADEMD</a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="hero-card-stack">
+      <div class="stat-card">
+        <div class="stat-card-inner">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <div>
+            <div class="stat-num">4</div>
+            <div class="stat-label">Disciplines united in one association</div>
+          </div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-inner">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div>
+            <div class="stat-num">50+</div>
+            <div class="stat-label">Annual events, webinars &amp; masterclasses</div>
+          </div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-inner">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          </div>
+          <div>
+            <div class="stat-num">CME</div>
+            <div class="stat-label">Accredited credits &amp; MOC points available</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROBLEM ══════════════════════════════════════════ -->
+<section id="problem" class="section">
+  <div class="container">
+    <div class="problem-grid">
+      <div class="problem-text reveal">
+        <span class="tag">The Challenge</span>
+        <h2>You Didn't Train for a Field That Changes <em>This Fast</em></h2>
+        <p>Metabolic medicine is transforming at a pace that no textbook, no single journal, and no solo practice can keep up with.</p>
+        <p>You're seeing patients with complex, overlapping conditions every day — and the associations that should help? Too often they deliver dense theory, expensive travel, and a badge for your wall.</p>
+        <ul class="pain-list">
+          <li><span class="pain-dot"></span><span>"I can't keep up with how fast this field is moving." — GLP-1s, CGM tech, shifting obesity guidelines: all at once.</span></li>
+          <li><span class="pain-dot"></span><span>"I know what the guidelines say, but applying them to complex patients is a different story."</span></li>
+          <li><span class="pain-dot"></span><span>"I feel like I'm practicing in a silo — there's no one to talk through hard cases with."</span></li>
+          <li><span class="pain-dot"></span><span>"I never got enough training in obesity medicine. It just wasn't covered."</span></li>
+        </ul>
+        <p style="font-size:.9rem;color:var(--mid-grey);">You don't need more CME checkboxes. You need to walk into your next appointment more confident than you walked into the last one.</p>
+      </div>
+      <div class="problem-visual reveal reveal-delay-1">
+        <div class="prob-block">
+          <div class="prob-block-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <h4>Rapid Field Evolution</h4>
+          <p>New drug classes, revised guidelines, and landmark trials are rewriting practice — sometimes within months of each other.</p>
+        </div>
+        <div class="prob-block">
+          <div class="prob-block-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          </div>
+          <h4>Clinical Complexity</h4>
+          <p>Diabetes, obesity, and endocrine disorders rarely present alone — yet most education is siloed by specialty.</p>
+        </div>
+        <div class="prob-block">
+          <div class="prob-block-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+          </div>
+          <h4>Professional Isolation</h4>
+          <p>Without a strong peer network, hard decisions get made alone. There's no one to call when a case defies the textbook.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ABOUT ════════════════════════════════════════════ -->
+<section id="about" class="section section--dark">
+  <div class="container">
+    <div class="about-inner">
+      <div class="about-text reveal">
+        <span class="tag tag--light">About ADEMD</span>
+        <h2>The Association Built for the Way Metabolic Medicine <em>Actually Works</em></h2>
+        <p>The Association for Diabetes, Endocrine, and Metabolic Disorders (ADEMD) exists for one reason: to make you a sharper, more connected clinician — faster.</p>
+        <p>We're the only professional home that brings together diabetes specialists, endocrinologists, obesity medicine physicians, researchers, and public health practitioners under one roof — because your patients don't fit neatly into one specialty either.</p>
+        <p>Led by world-class faculty and backed by partner institutions at the forefront of metabolic science, ADEMD is where the field's sharpest minds choose to learn — and to teach.</p>
+        <div class="about-pillars">
+          <div class="pillar"><span class="pillar-dot"></span><span>Clinical application over academic theory</span></div>
+          <div class="pillar"><span class="pillar-dot"></span><span>Peer-to-peer learning from practicing specialists</span></div>
+          <div class="pillar"><span class="pillar-dot"></span><span>Multidisciplinary — the whole metabolic picture</span></div>
+          <div class="pillar"><span class="pillar-dot"></span><span>Global reach, locally relevant programming</span></div>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <div class="about-disciplines">
+          <div class="disc-cell">
+            <div class="disc-num">01</div>
+            <div class="disc-name">Diabetes Medicine</div>
+          </div>
+          <div class="disc-cell">
+            <div class="disc-num">02</div>
+            <div class="disc-name">Endocrinology</div>
+          </div>
+          <div class="disc-cell">
+            <div class="disc-num">03</div>
+            <div class="disc-name">Obesity Medicine</div>
+          </div>
+          <div class="disc-cell">
+            <div class="disc-num">04</div>
+            <div class="disc-name">Public Health</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SOLUTION ══════════════════════════════════════════ -->
+<section id="solution" class="section">
+  <div class="container">
+    <div class="solution-header reveal">
+      <span class="tag">What We Offer</span>
+      <h2>Education That <em>Works</em> on Monday Morning</h2>
+      <p>Every ADEMD event is designed so that what you learn on Saturday, you can apply the following week. World-class faculty. Real clinical scenarios. Immediate, practical takeaways.</p>
+    </div>
+    <div class="solution-grid">
+      <div class="sol-card reveal">
+        <div class="sol-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        </div>
+        <h3>Masterclasses</h3>
+        <p>Deep-dive, expert-led sessions on the most complex topics in metabolic medicine. From GLP-1 pharmacology to managing comorbid diabetes and thyroid disease — built for specialists.</p>
+      </div>
+      <div class="sol-card reveal reveal-delay-1">
+        <div class="sol-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        </div>
+        <h3>Live Webinars</h3>
+        <p>Join peers and leading faculty in real time. Ask questions. Discuss challenging cases. Walk away with tools you can use — without leaving your clinic.</p>
+      </div>
+      <div class="sol-card reveal reveal-delay-2">
+        <div class="sol-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h3>Annual Summits</h3>
+        <p>Multi-day events bringing together the best minds in diabetes, endocrinology, and obesity medicine. Keynotes, case workshops, and the peer connections that last years.</p>
+      </div>
+      <div class="sol-card reveal">
+        <div class="sol-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>On-Demand Library</h3>
+        <p>Can't make it live? Access recordings, slides, and curated resources whenever it fits your schedule. Your education, on your terms.</p>
+      </div>
+      <div class="sol-card reveal reveal-delay-1">
+        <div class="sol-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.1 1.22 2 2 0 012.1 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.1 7.9a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+        </div>
+        <h3>Peer Community</h3>
+        <p>Connect with endocrinologists, obesity specialists, and metabolic researchers who treat the same complex patients you do. A peer group that gets it.</p>
+      </div>
+      <div class="sol-card reveal reveal-delay-2">
+        <div class="sol-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <h3>CME &amp; MOC Credits</h3>
+        <p>Earn accredited CME credits and ABIM MOC points across all our events. Satisfy your recertification requirements while actually advancing your practice.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ BENEFITS ══════════════════════════════════════════ -->
+<section id="benefits" class="section section--alt">
+  <div class="container">
+    <div class="benefits-header reveal">
+      <span class="tag">Why Join ADEMD</span>
+      <h2>Three Ways ADEMD Changes <em>How You Practice</em></h2>
+      <p>Not more certificates. Real, lasting change in how you see, treat, and connect — starting from your very first event.</p>
+    </div>
+    <div class="benefits-list">
+      <div class="benefit-row reveal">
+        <div class="benefit-num">01</div>
+        <div class="benefit-title-col">
+          <h3>You Stop Practicing in a Silo</h3>
+          <span class="benefit-feature">Live webinars &amp; interactive summits</span>
+        </div>
+        <div class="benefit-desc-col">
+          <p>Our live webinars and interactive summits put you in the room with leading endocrinologists, obesity physicians, and metabolic researchers tackling the same complex cases you face — so you're never making hard calls alone. You'll leave every session with specific peers you can call on.</p>
+        </div>
+      </div>
+      <div class="benefit-row reveal reveal-delay-1">
+        <div class="benefit-num">02</div>
+        <div class="benefit-title-col">
+          <h3>You Get Practical Tools, Not More Theory</h3>
+          <span class="benefit-feature">Clinical application masterclasses</span>
+        </div>
+        <div class="benefit-desc-col">
+          <p>Every masterclass and event is built around clinical application — real patient scenarios, current evidence, and frameworks you can implement immediately. World-renowned faculty translate the latest research into decisions you can make Monday morning.</p>
+        </div>
+      </div>
+      <div class="benefit-row reveal reveal-delay-2">
+        <div class="benefit-num">03</div>
+        <div class="benefit-title-col">
+          <h3>You Stay Ahead of the Field — Not Just Caught Up</h3>
+          <span class="benefit-feature">Multidisciplinary full-spectrum coverage</span>
+        </div>
+        <div class="benefit-desc-col">
+          <p>ADEMD covers the full metabolic spectrum: diabetes, endocrine disorders, obesity, and public health — all in one place. One membership. One community. No more jumping between five different associations to stay current on what matters to your patients.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SOCIAL PROOF ══════════════════════════════════════ -->
+<section id="proof" class="section">
+  <div class="container">
+    <div class="proof-header reveal">
+      <span class="tag">Community &amp; Trust</span>
+      <h2>Trusted By Clinicians Who Can't Afford to Fall Behind</h2>
+      <p>World-class institutional partners. Practitioners from across the metabolic spectrum. A community built on peer trust.</p>
+    </div>
+
+    <div class="logo-strip reveal">
+      <div class="logo-pill">Harvard Medical School</div>
+      <div class="logo-pill">Mayo Clinic</div>
+      <div class="logo-pill">Johns Hopkins</div>
+      <div class="logo-pill">AACE Partner</div>
+      <div class="logo-pill">ADA Aligned</div>
+    </div>
+
+    <div class="testimonials">
+      <div class="testi-card reveal">
+        <div class="testi-quote-mark">"</div>
+        <p class="testi-text">I walked out of the ADEMD summit and immediately changed how I counsel my patients with obesity and type 2 diabetes. It was the most clinically relevant education I'd had in years — and I've been practicing for over a decade.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">JR</div>
+          <div>
+            <div class="testi-name">Dr. J. Ramos [Placeholder]</div>
+            <div class="testi-role">Endocrinologist — São Paulo, Brazil</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal reveal-delay-1">
+        <div class="testi-quote-mark">"</div>
+        <p class="testi-text">What I value most is the community. I finally have peers who treat the same complex patients I do. I've learned more from the case discussions than from any journal I've read this year.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">SK</div>
+          <div>
+            <div class="testi-name">Dr. S. Kapoor [Placeholder]</div>
+            <div class="testi-role">Diabetes Specialist — London, UK</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA BLOCK ══════════════════════════════════════════ -->
+<section id="cta-block" class="section">
+  <div class="container">
+    <div class="cta-inner reveal">
+      <span class="tag tag--light">Next Steps</span>
+      <h2>Your Next Breakthrough Case <em>Starts Here</em></h2>
+      <p>The field isn't slowing down. Neither should you. Join thousands of endocrinologists, diabetes specialists, and metabolic health practitioners at ADEMD's upcoming events — and leave with tools you can use the very next day.</p>
+      <div class="cta-actions">
+        <a href="#contact" class="btn btn--primary">
+          Reserve My Spot at the Next Event
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#solution" class="btn btn--outline-light">Browse All Programs</a>
+      </div>
+      <span class="urgency-note">Seats fill quickly. Registration closes when capacity is reached.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAQ ═══════════════════════════════════════════════ -->
+<section id="faq" class="section section--alt">
+  <div class="container">
+    <div class="faq-layout">
+      <div class="faq-intro reveal">
+        <span class="tag">FAQ</span>
+        <h2>Questions Clinicians Ask <em>Before Joining</em></h2>
+        <p>Everything you need to know before you register — answered plainly, without the jargon.</p>
+      </div>
+      <div class="faq-list reveal reveal-delay-1">
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">
+            Is ADEMD only for endocrinologists?
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+          <div class="faq-a">Not at all. ADEMD is built for the full metabolic care team — endocrinologists, diabetes specialists, obesity physicians, scientists, nurse practitioners, physician assistants, and public health practitioners. If your work touches diabetes, endocrine health, or metabolic disorders, you belong here.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">
+            What makes ADEMD events different from standard CME?
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+          <div class="faq-a">Most CME gives you credits. ADEMD gives you that plus a peer network, world-class faculty, and sessions designed around real clinical decisions — not just academic updates. You'll leave each event with specific, practical steps you can apply immediately in your practice.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">
+            How do I know the content will be relevant to my practice?
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+          <div class="faq-a">Our programming is shaped by practicing clinicians, not committees. Every topic on our agenda reflects the questions you and your peers are actually asking — from the latest GLP-1 evidence to managing complex comorbid cases. If it's moving the field, it's on our stage.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">
+            Can I attend events if I'm outside the US?
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+          <div class="faq-a">Absolutely. ADEMD has global reach. Most of our webinars and masterclasses are offered virtually, so you can participate regardless of where you practice. Our in-person summits are held in major medical hubs — and recordings are available to all members.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ════════════════════════════════════════════ -->
+<section id="contact" class="section">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <span class="tag">Get In Touch</span>
+        <h2>Ready to Join or Have <em>Questions?</em></h2>
+        <p>Whether you want to register for an event, explore membership, or simply learn more, our team is here to help. Reach out and a member of the ADEMD team will get back to you within one business day.</p>
+        <div class="contact-items">
+          <div class="contact-item">
+            <div class="ci-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div>
+              <div class="ci-label">Email</div>
+              <div class="ci-value">info@ademd.org</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="ci-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.1 1.22 2 2 0 012.1 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.1 7.9a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+            </div>
+            <div>
+              <div class="ci-label">Phone</div>
+              <div class="ci-value">+1 (800) 000-0000</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="ci-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+            </div>
+            <div>
+              <div class="ci-label">Website</div>
+              <div class="ci-value">www.ademd.org</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="ci-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div>
+              <div class="ci-label">Headquarters</div>
+              <div class="ci-value">Global — events worldwide</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal reveal-delay-1">
+        <form class="contact-form" onsubmit="handleSubmit(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fname">First Name</label>
+              <input type="text" id="fname" placeholder="Dr. Jane" required />
+            </div>
+            <div class="form-group">
+              <label for="lname">Last Name</label>
+              <input type="text" id="lname" placeholder="Smith" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="jane.smith@clinic.com" required />
+          </div>
+          <div class="form-group">
+            <label for="specialty">Your Specialty</label>
+            <select id="specialty">
+              <option value="">Select your specialty…</option>
+              <option>Endocrinology</option>
+              <option>Diabetes Medicine</option>
+              <option>Obesity Medicine</option>
+              <option>Public Health</option>
+              <option>Primary Care</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="interest">I'm interested in…</label>
+            <select id="interest">
+              <option value="">Select…</option>
+              <option>Registering for an upcoming event</option>
+              <option>Membership information</option>
+              <option>Masterclass &amp; webinar catalog</option>
+              <option>Speaking / faculty opportunities</option>
+              <option>Partnership enquiries</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message">Message (optional)</label>
+            <textarea id="message" placeholder="Tell us how we can help…"></textarea>
+          </div>
+          <button type="submit" class="btn btn--primary" style="align-self:flex-start;margin-top:.5rem;">
+            Send Message
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+          <p id="form-success" style="display:none;font-size:.88rem;color:var(--teal);font-weight:500;margin-top:.5rem;">✓ Thank you — we'll be in touch within one business day.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ════════════════════════════════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="#hero" class="nav-logo" style="display:inline-flex;">
+          <span class="nav-logo-abbr">ADEMD<span class="nav-logo-dot">.</span></span>
+        </a>
+        <p>The Association for Diabetes, Endocrine, and Metabolic Disorders. Advancing practice. Building community.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h5>Association</h5>
+          <ul>
+            <li><a href="#about">About ADEMD</a></li>
+            <li><a href="#solution">What We Offer</a></li>
+            <li><a href="#benefits">Why Join</a></li>
+            <li><a href="#proof">Our Community</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Programs</h5>
+          <ul>
+            <li><a href="#solution">Masterclasses</a></li>
+            <li><a href="#solution">Webinars</a></li>
+            <li><a href="#solution">Annual Summit</a></li>
+            <li><a href="#solution">CME Credits</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Connect</h5>
+          <ul>
+            <li><a href="#contact">Contact Us</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Use</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Association for Diabetes, Endocrine, and Metabolic Disorders (ADEMD). All rights reserved.</span>
+      <span>Designed for metabolic specialists worldwide.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══ SCRIPTS ═══════════════════════════════════════════ -->
+<script>
+  // Nav scroll shadow
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // Hamburger toggle
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+  function closeMobile() {
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  }
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => observer.observe(el));
+
+  // FAQ accordion
+  function toggleFaq(item) {
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // Form submit
+  function handleSubmit(e) {
+    e.preventDefault();
+    document.getElementById('form-success').style.display = 'block';
+    e.target.querySelectorAll('input, select, textarea, button[type="submit"]').forEach(el => el.disabled = true);
+  }
+</script>
+</body>
+</html>
